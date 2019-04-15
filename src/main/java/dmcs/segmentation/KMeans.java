@@ -72,8 +72,12 @@ public class KMeans {
 
     private double computeCentroidSum() {
         double centroidSum = 0;
+        if (centroids.size() == 1) {
+            return 0;
+        }
         for (RealVector cenI : centroids) {
             centroidSum += centroids.stream()
+                    .filter(cenJ -> !cenJ.equals(cenI))
                     .map(cenJ -> distanceMeasure.compute(cenJ.toArray(), cenI.toArray()))
                     .mapToDouble(p -> p)
                     .min()
