@@ -30,9 +30,9 @@ public class LineChart extends JFrame {
      */
     private DefaultXYDataset createDataset(List<History> history) {
         DefaultXYDataset result = new DefaultXYDataset();
-        double[][] avgDistSeries = extractAvgDist(history);
+        double[][] centroidSumSeries = extractCentroidSum(history);
         double[][] distSumSeries = extractDistSumSeries(history);
-        result.addSeries("AvgDist", avgDistSeries);
+        result.addSeries("CentroidSum", centroidSumSeries);
         result.addSeries("DistSum", distSumSeries);
         return result;
 
@@ -49,13 +49,13 @@ public class LineChart extends JFrame {
         return res;
     }
 
-    private double[][] extractAvgDist(List<History> history) {
+    private double[][] extractCentroidSum(List<History> history) {
         double[][] res = new double[2][];
         res[0] = new double[history.size()];
         res[1] = new double[history.size()];
         for (int i = 0; i < history.size(); i++) {
             res[0][i] = (double) i;
-            res[1][i] = history.get(i).getAvgDistance();
+            res[1][i] = history.get(i).getCentroidSum();
         }
         return res;
     }

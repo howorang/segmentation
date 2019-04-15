@@ -55,9 +55,31 @@ public class KMeans {
             computeNewCentroids();
         }
         if (collectHistory) {
-            history.setAvgDistance(distances.stream().mapToDouble(p -> p).average().orElseThrow());
-            history.setDistanceSum(distances.stream().mapToDouble(p -> p).sum());
+            history.setDistanceSum(computeDistanceSum());
+            history.setCentroidSum(computeCentroidSum());
         }
+    }
+
+    private double computeDistanceSum() {
+        double distanceSum = 0;
+        for (var centroidMapEntry : centroidToPointsMap.asMap().entrySet()) {
+            for (var point : centroidMapEntry.getValue()) {
+                distanceSum += distanceMeasure.compute(point.toArray(), centroidMapEntry.getKey().toArray());
+            }
+        }
+        return distanceSum;
+    }
+
+    private double computeCentroidSum() {
+        double centroidSum = 0;
+        for (RealVector cenI : centroids) {
+            centroidSum += centroids.stream()
+                    .map(cenJ -> distanceMeasure.compute(cenJ.toArray(), cenI.toArray()))
+                    .mapToDouble(p -> p)
+                    .min()
+                    .orElseThrow();
+        }
+        return centroidSum;
     }
 
     private void computeNewCentroids() {
@@ -84,11 +106,7 @@ public class KMeans {
     }
 
     private double getDistance(RealVector row, RealVector centroid) {
-        double computed = distanceMeasure.compute(centroid.toArray(), row.toArray());
-        if (collectHistory) {
-            distances.add(computed);
-        }
-        return computed;
+        return distanceMeasure.compute(centroid.toArray(), row.toArray());
     }
 
 

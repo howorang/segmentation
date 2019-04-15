@@ -1,8 +1,9 @@
 package dmcs.segmentation;
 
 public class History {
-    public Double avgDistance;
-    public Double distanceSum;
+    private double avgDistance;
+    private double distanceSum;
+    private double centroidSum;
 
     public Double getAvgDistance() {
         return avgDistance;
@@ -18,5 +19,13 @@ public class History {
 
     public void setDistanceSum(Double distanceSum) {
         this.distanceSum = distanceSum;
+    }
+
+    public double getCentroidSum() {
+        return centroidSum;
+    }
+
+    public void setCentroidSum(double centroidSum) {
+        this.centroidSum = centroidSum;
     }
 }
