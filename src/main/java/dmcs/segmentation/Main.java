@@ -1,6 +1,8 @@
 package dmcs.segmentation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -8,11 +10,17 @@ public class Main {
             throw new IllegalArgumentException("Two arguments required: k and number of iterations");
         }
         Database database = new Database("C:\\Users\\Piotr Borczyk\\IdeaProjects\\segmentation\\src\\main\\resources\\segmentacja.txt");
-        KMeans kMeans = new KMeans(Integer.parseInt(args[0]), database);
-        kMeans.execute(Integer.parseInt(args[1]));
-        kMeans.getCentroidToPointsMap().asMap().forEach((centroid, points) -> {
-            System.out.println("CENTROID: " + centroid.toString());
-            points.forEach(point -> System.out.println("    " + point));
-        });
+        List<History> histories = new ArrayList<>();
+        int k = Integer.parseInt(args[0]);
+        for (int i = 1; i < k; i++ ) {
+            KMeans kMeans = new KMeans(i, database);
+            kMeans.setCollectHistory(true);
+            kMeans.execute(Integer.parseInt(args[1]));
+            histories.add(kMeans.getHistory());
+        }
+        System.out.println(histories);
+        LineChart demo = new LineChart("", "", histories);
+        demo.pack();
+        demo.setVisible(true);
     }
 }
